@@ -12,6 +12,11 @@ import java.util.*;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
+// NOTE: Can't run code, build is failed:
+// TCPProxy.java:25:50
+// java: unclosed string literal
+// :82:9
+//  java: illegal start of expression
 public class TCPProxy {
     private final int THREADS_COUNT = 10;
     private final List<TransferData> transfers = new ArrayList<>();
@@ -19,9 +24,11 @@ public class TCPProxy {
 
     public static void main(final String[] args) throws IOException {
         if (args == null || args.length != 1 || Arrays.stream(args).anyMatch(Objects::isNull)) {
-            throw new IllegalArgumentException("""
-                    TCPProxy - is proxy for tcp connections from localhost to another host
-                    Usage: TCPProxy  [tableName]  launch transfers from which written in the table""");
+            throw new IllegalArgumentException("TCPProxy - is proxy for tcp connections from localhost to another host\n" +
+                    "//                    Usage: TCPProxy  [tableName]  launch transfers from which written in the table\"");
+//            throw new IllegalArgumentException("""
+//                    TCPProxy - is proxy for tcp connections from localhost to another host
+//                    Usage: TCPProxy  [tableName]  launch transfers from which written in the table""");
         }
 
         new TCPProxy(args[0]).run();
@@ -34,16 +41,24 @@ public class TCPProxy {
         } catch (IOException e) {
             throw new IOException("Can't read file");
         } catch (InputMismatchException e) {
-            throw new InputMismatchException("""
-                    File has incorrect structure
-                                        
-                    File may contain only this strings:
-                    [local port]  [remote host]  [remote port]
-                                        
-                    Example of file:
-                    8080  google.com    2345
-                    5432  postgres.com  22
-                    """);
+            throw new InputMismatchException("File has incorrect structure\n" +
+                    "\n" +
+                    "                    File may contain only this strings:\n" +
+                    "                    [local port]  [remote host]  [remote port]\n" +
+                    "\n" +
+                    "                    Example of file:\n" +
+                    "                    8080  google.com    2345\n" +
+                    "                    5432  postgres.com  22");
+//            throw new InputMismatchException("""
+//                    File has incorrect structure
+//
+//                    File may contain only this strings:
+//                    [local port]  [remote host]  [remote port]
+//
+//                    Example of file:
+//                    8080  google.com    2345
+//                    5432  postgres.com  22
+//                    """);
         }
     }
 
