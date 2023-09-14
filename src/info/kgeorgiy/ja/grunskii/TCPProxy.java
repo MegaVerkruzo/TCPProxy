@@ -36,6 +36,7 @@ public class TCPProxy {
 
     public TCPProxy(final String tableName) throws IOException {
         final Path tablePath = Paths.get("tables", tableName);
+        // NOTE: Maybe better(faster) to use BufferedReader, then Scanner?
         try (final Scanner scanner = new Scanner(tablePath, StandardCharsets.UTF_8)) {
             readLinesFromFile(scanner);
         } catch (IOException e) {
@@ -64,6 +65,8 @@ public class TCPProxy {
 
     public void run() throws IOException {
         for (TransferData transfer : transfers) {
+            // NOTE: No error-handling
+            // NOTE: Better to split try to several try-blocks for better error-handling
             try (ServerSocket serverSocket = new ServerSocket(transfer.localPort);
                  Socket localSocket = serverSocket.accept();
                  Socket remoteSocket = new Socket(transfer.remoteHost, transfer.remotePort);
@@ -82,6 +85,7 @@ public class TCPProxy {
 
     private record TransferData(int localPort, String remoteHost, int remotePort) {
         public static TransferData getTransferData(String line) throws InputMismatchException {
+            // NOTE: bufferedReader then Scanner?
             final Scanner scanner = new Scanner(line);
             final int localPort = scanner.nextInt();
             final String remoteHost = scanner.next();
